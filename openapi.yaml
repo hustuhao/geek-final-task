@@ -1,0 +1,62 @@
+# Generated with protoc-gen-openapi
+# https://github.com/google/gnostic/tree/master/apps/protoc-gen-openapi
+
+openapi: 3.0.3
+info:
+    title: Producer API
+    version: 0.0.1
+paths:
+    /order/save:
+        post:
+            tags:
+                - Producer
+            description: Sends a greeting
+            operationId: Producer_SaveOrder
+            parameters:
+                - name: order.orderId
+                  in: query
+                  schema:
+                    type: integer
+                    format: int64
+                - name: order.Uid
+                  in: query
+                  schema:
+                    type: string
+                - name: order.PayId
+                  in: query
+                  schema:
+                    type: integer
+                    format: int64
+                - name: order.Price
+                  in: query
+                  schema:
+                    type: integer
+                    format: int64
+                - name: order.CreateTime
+                  in: query
+                  schema:
+                    type: integer
+                    format: int64
+                - name: order.UpdateTime
+                  in: query
+                  schema:
+                    type: integer
+                    format: int64
+            requestBody:
+                content:
+                    application/json: {}
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/SaveOrderReply'
+components:
+    schemas:
+        SaveOrderReply:
+            type: object
+            properties: {}
+tags:
+    - name: Producer

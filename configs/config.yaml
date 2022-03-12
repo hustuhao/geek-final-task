@@ -1,0 +1,22 @@
+server:
+  http:
+    addr: 0.0.0.0:8000
+    timeout: 1s
+  grpc:
+    addr: 0.0.0.0:9000
+    timeout: 1s
+
+trace:
+  endpoint: http://localhost:14268/api/traces
+
+data:
+  kafka:
+    addrs:
+      - 127.0.0.1:9092
+    topic: 'order'
+    groupId: 'order.v1'
+
+registry:
+  consul:
+    address: 127.0.0.1:8500
+    scheme: http

@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+package api.producer;
+import "google/api/annotations.proto";
+
+option go_package = "dataproducer/api/producer;producer";
+option java_multiple_files = true;
+option java_package = "api.producer";
+
+service Producer {
+	// Sends a greeting
+	rpc SaveOrder (SaveOrderRequest) returns (SaveOrderReply)  {
+		option (google.api.http) = {
+			post: "/order/save"
+			body: "Order"
+		};
+	}
+}
+
+message Order {
+	int64 orderId = 1;
+	string Uid = 2;
+	int64 PayId = 3;
+	int64 Price = 4;
+	int64 CreateTime = 5;
+	int64 UpdateTime = 6;
+}
+
+message SaveOrderRequest {
+	Order order = 1;
+}
+
+message SaveOrderReply {
+
+}
