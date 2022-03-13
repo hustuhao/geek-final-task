@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+package api.admin;
+import "google/api/annotations.proto";
+
+option go_package = "geek-final-task/api/admin;admin";
+option java_multiple_files = true;
+option java_package = "api.admin";
+
+service Admin {
+	// 查询满足条件的订单
+	rpc SearchOrder (SearchOrderRequest) returns (SearchOrderReply)  {
+		option (google.api.http) = {
+			post: "/order/search"
+			body: "Order"
+		};
+	}
+}
+
+message SearchOrderRequest {
+	Order order = 1;
+}
+
+message Order {
+	int64 order_id = 1;
+	string uid = 2;
+	int64 pay_id = 3;
+	int64 price = 4;
+	int64 create_time = 5;
+	int64 update_time = 6;
+}
+
+message SearchOrderReply {
+	repeated Order orders = 1;
+}

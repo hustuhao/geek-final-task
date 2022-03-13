@@ -15,7 +15,7 @@ import (
 )
 
 // ProviderSet is data providers.
-var ProviderSet = wire.NewSet(NewData, NewEsClient, NewKafkaProducer, NewDiscovery, NewRegistrar, NewOrderRepo)
+var ProviderSet = wire.NewSet(NewData, NewEsClient, NewKafkaProducer, NewDiscovery, NewRegistry, NewOrderRepo)
 
 // Data .
 type Data struct {
@@ -38,6 +38,14 @@ func NewData(kp sarama.AsyncProducer, c *conf.Data, logger log.Logger) (*Data, f
 }
 
 func NewJobData(es *elasticsearch.Client) (*Data, func(), error) {
+	d := &Data{
+		es: es,
+	}
+	return d, func() {
+	}, nil
+}
+
+func NewAdminData(es *elasticsearch.Client) (*Data, func(), error) {
 	d := &Data{
 		es: es,
 	}
@@ -80,7 +88,7 @@ func NewDiscovery(conf *conf.Registry) registry.Discovery {
 	return r
 }
 
-func NewRegistrar(conf *conf.Registry) registry.Registrar {
+func NewRegistry(conf *conf.Registry) registry.Registrar {
 	c := consulAPI.DefaultConfig()
 	c.Address = conf.Consul.Address
 	c.Scheme = conf.Consul.Scheme

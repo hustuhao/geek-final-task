@@ -1,8 +1,8 @@
-package server
+package dataproducer
 
 import (
 	"github.com/google/wire"
 )
 
-// ProviderSet is server providers.
+// ProviderSet is geek-final-task providers.
 var ProviderSet = wire.NewSet(NewHTTPServer, NewGRPCServer)

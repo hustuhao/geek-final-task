@@ -7,11 +7,10 @@
 package main
 
 import (
-	"dataproducer/internal/biz"
+	"dataproducer/internal/admin"
+	"dataproducer/internal/admin/service"
 	"dataproducer/internal/conf"
 	"dataproducer/internal/data"
-	"dataproducer/internal/dataproducer"
-	"dataproducer/internal/dataproducer/service"
 	"github.com/go-kratos/kratos/v2"
 	"github.com/go-kratos/kratos/v2/log"
 )
@@ -20,19 +19,11 @@ import (
 
 // initApp init kratos application.
 func initApp(server *conf.Server, confData *conf.Data, registry *conf.Registry, logger log.Logger) (*kratos.App, func(), error) {
-	asyncProducer := data.NewKafkaProducer(confData)
-	dataData, cleanup, err := data.NewData(asyncProducer, confData, logger)
-	if err != nil {
-		return nil, nil, err
-	}
-	orderRepo := data.NewOrderRepo(dataData, logger)
-	orderCase := biz.NewOrderCase(orderRepo, logger)
-	orderService := service.NewOrderService(orderCase, logger)
-	httpServer := dataproducer.NewHTTPServer(server, orderService, logger)
-	grpcServer := dataproducer.NewGRPCServer(server, orderService, logger)
+	adminService := service.NewAdminService()
+	httpServer := admin.NewHTTPServer(server, adminService, logger)
+	grpcServer := admin.NewGRPCServer(server, adminService, logger)
 	registrar := data.NewRegistry(registry)
 	app := newApp(logger, httpServer, grpcServer, registrar)
 	return app, func() {
-		cleanup()
 	}, nil
 }

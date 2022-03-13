@@ -1,17 +1,17 @@
-package server
+package admin
 
 import (
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-kratos/kratos/v2/middleware/recovery"
 	"github.com/go-kratos/kratos/v2/transport/grpc"
 
-	p "dataproducer/api/producer"
+	a "dataproducer/api/admin"
+	"dataproducer/internal/admin/service"
 	"dataproducer/internal/conf"
-	"dataproducer/internal/service"
 )
 
-// NewGRPCServer new a gRPC server.
-func NewGRPCServer(c *conf.Server, producer *service.OrderService, logger log.Logger) *grpc.Server {
+// NewGRPCServer new a gRPC admin.
+func NewGRPCServer(c *conf.Server, admin *service.AdminService, logger log.Logger) *grpc.Server {
 	var opts = []grpc.ServerOption{
 		grpc.Middleware(
 			recovery.Recovery(),
@@ -27,6 +27,6 @@ func NewGRPCServer(c *conf.Server, producer *service.OrderService, logger log.Lo
 		opts = append(opts, grpc.Timeout(c.Grpc.Timeout.AsDuration()))
 	}
 	srv := grpc.NewServer(opts...)
-	p.RegisterProducerServer(srv, producer)
+	a.RegisterAdminServer(srv, admin)
 	return srv
 }

@@ -1,16 +1,16 @@
-package server
+package admin
 
 import (
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-kratos/kratos/v2/middleware/recovery"
 	"github.com/go-kratos/kratos/v2/transport/http"
 
-	p "dataproducer/api/producer"
+	a "dataproducer/api/admin"
+	"dataproducer/internal/admin/service"
 	"dataproducer/internal/conf"
-	"dataproducer/internal/service"
 )
 
-func NewHTTPServer(c *conf.Server, producer *service.OrderService, logger log.Logger) *http.Server {
+func NewHTTPServer(c *conf.Server, admin *service.AdminService, logger log.Logger) *http.Server {
 	var opts = []http.ServerOption{
 		http.Middleware(
 			recovery.Recovery(),
@@ -26,6 +26,6 @@ func NewHTTPServer(c *conf.Server, producer *service.OrderService, logger log.Lo
 		opts = append(opts, http.Timeout(c.Http.Timeout.AsDuration()))
 	}
 	srv := http.NewServer(opts...)
-	p.RegisterProducerHTTPServer(srv, producer)
+	a.RegisterAdminHTTPServer(srv, admin)
 	return srv
 }
