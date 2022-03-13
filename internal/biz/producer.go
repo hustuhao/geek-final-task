@@ -19,6 +19,10 @@ type OrderRepo interface {
 	SaveOrder(ctx context.Context, order *Order) error
 }
 
+type OrderJobRepo interface {
+	PersistentSaveOrder(ctx context.Context, order *Order) (*Order, error)
+}
+
 type OrderCase struct {
 	Repo OrderRepo
 	log  *log.Helper

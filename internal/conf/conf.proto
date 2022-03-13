@@ -52,9 +52,16 @@ message Data {
     string group_id = 3;
   }
 
+  message Es {
+    repeated string addrs = 1;
+    string username = 2;
+    string password = 3;
+  }
+
   Database database = 1;
   Redis redis = 2;
   Kafka kafka = 3;
+  Es es = 4;
 }
 
 message Registry {

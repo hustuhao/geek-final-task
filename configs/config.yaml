@@ -15,6 +15,11 @@ data:
       - 127.0.0.1:9092
     topic: 'order'
     groupId: 'order.v1'
+  es:
+    addrs:
+      -  127.0.0.1:9200
+    username: root
+    password: 123456
 
 registry:
   consul:

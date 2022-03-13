@@ -2,6 +2,7 @@ package data
 
 import (
 	"github.com/Shopify/sarama"
+	"github.com/elastic/go-elasticsearch/v8"
 	"github.com/go-kratos/kratos/contrib/registry/consul/v2"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-kratos/kratos/v2/registry"
@@ -14,12 +15,13 @@ import (
 )
 
 // ProviderSet is data providers.
-var ProviderSet = wire.NewSet(NewData, NewKafkaProducer, NewDiscovery, NewRegistrar, NewOrderRepo)
+var ProviderSet = wire.NewSet(NewData, NewEsClient, NewKafkaProducer, NewDiscovery, NewRegistrar, NewOrderRepo)
 
 // Data .
 type Data struct {
 	// 依赖kafka
 	kp sarama.AsyncProducer
+	es *elasticsearch.Client
 }
 
 // NewData .
@@ -33,6 +35,27 @@ func NewData(kp sarama.AsyncProducer, c *conf.Data, logger log.Logger) (*Data, f
 			log.Error(err)
 		}
 	}, nil
+}
+
+func NewJobData(es *elasticsearch.Client) (*Data, func(), error) {
+	d := &Data{
+		es: es,
+	}
+	return d, func() {
+	}, nil
+}
+
+func NewEsClient(conf *conf.Data) *elasticsearch.Client {
+	cfg := elasticsearch.Config{
+		Addresses: conf.Es.Addrs,
+		Username:  conf.Es.Username,
+		Password:  conf.Es.Password,
+	}
+	es, err := elasticsearch.NewClient(cfg)
+	if err != nil {
+		panic(err)
+	}
+	return es
 }
 
 func NewKafkaProducer(conf *conf.Data) sarama.AsyncProducer {
